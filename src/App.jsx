@@ -1,11 +1,78 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Hero from './components/Hero';
 import Features from './components/Features';
 import Toolkit from './components/Toolkit';
 import Footer from './components/Footer';
+import FileDrop from './components/FileDrop';
+import ChatBox from './components/ChatBox';
+import PreviewPane from './components/PreviewPane';
+import Suggestions from './components/Suggestions';
 import { Flame } from 'lucide-react';
 
 export default function App() {
+  const [fileMeta, setFileMeta] = useState(null);
+  const [fileContent, setFileContent] = useState('');
+  const [working, setWorking] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [notes, setNotes] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+
+  // simple simulated processing
+  useEffect(() => {
+    if (!working) return;
+    setProgress(0);
+    const id = setInterval(() => {
+      setProgress((p) => {
+        const next = Math.min(100, p + Math.ceil(Math.random() * 12));
+        if (next >= 100) {
+          clearInterval(id);
+          setWorking(false);
+          setNotes((prev) => prev.length ? prev : [
+            'Scanned for insecure RegisterNetEvent usage.',
+            'Checked loops for excessive Wait(0) calls.',
+            'Looked for deprecated ESX functions to replace with ox_lib.'
+          ]);
+        }
+        return next;
+      });
+    }, 300);
+    return () => clearInterval(id);
+  }, [working]);
+
+  const handleFileLoad = ({ content, meta }) => {
+    setFileMeta(meta);
+    setFileContent(content);
+    setNotes([]);
+    setWorking(true);
+
+    // crude suggestion inference
+    const lc = content.toLowerCase();
+    const sugg = [];
+    if (lc.includes('registernetevent')) {
+      sugg.push({ title: 'Validate RegisterNetEvent sources', desc: 'Ensure source checks on server and sanitize client payloads.' });
+    }
+    if (lc.includes('esx')) {
+      sugg.push({ title: 'Offer ESX → ox_lib context', desc: 'Replace legacy ESX menus with ox_lib context menus and callbacks.' });
+    }
+    if (lc.includes('createthread') || lc.includes('while true do')) {
+      sugg.push({ title: 'Consolidate threads', desc: 'Debounce heavy loops and use proper Wait times to reduce CPU usage.' });
+    }
+    if (!sugg.length) {
+      sugg.push({ title: 'Add README and config', desc: 'Generate configuration file and documentation for easier release.' });
+    }
+    setSuggestions(sugg);
+  };
+
+  const handleAsk = (question, replyCb) => {
+    setWorking(true);
+    setNotes([]);
+    const baseReply = `Got it. I will analyze ${fileMeta?.name ? fileMeta.name : 'your input'} for optimization, security, and framework best practices.`;
+    setTimeout(() => replyCb(baseReply), 400);
+    setTimeout(() => replyCb('Tip: prefer ox_lib callbacks for client→server interactions and validate identifiers on the server.'), 1200);
+  };
+
+  const suggestionItems = useMemo(() => suggestions.map((s) => ({ ...s })), [suggestions]);
+
   return (
     <div className="min-h-screen bg-[#0B0D14] text-white">
       {/* Top Bar */}
@@ -21,14 +88,33 @@ export default function App() {
           </div>
           <nav className="hidden md:flex items-center gap-6 text-sm text-white/70">
             <a href="#features" className="hover:text-white">Features</a>
+            <a href="#analyzer" className="hover:text-white">Analyzer</a>
             <a href="#toolkit" className="hover:text-white">Toolkit</a>
-            <a href="#docs" className="hover:text-white">Docs</a>
           </nav>
         </div>
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 md:py-12 space-y-6 md:space-y-10">
         <Hero />
+
+        {/* Analyzer Section */}
+        <section id="analyzer" className="grid lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            <FileDrop onFileLoad={handleFileLoad} />
+            <PreviewPane
+              working={working}
+              progress={progress}
+              fileMeta={fileMeta}
+              fileContent={fileContent}
+              resultNotes={notes}
+            />
+          </div>
+          <div className="lg:col-span-1 space-y-4">
+            <ChatBox onAsk={handleAsk} isWorking={working} />
+            <Suggestions items={suggestionItems} />
+          </div>
+        </section>
+
         <div id="features">
           <Features />
         </div>
