@@ -10,11 +10,10 @@ import Suggestions from './components/Suggestions';
 import { Flame } from 'lucide-react';
 
 export default function App() {
-  const [fileMeta, setFileMeta] = useState(null);
-  const [fileContent, setFileContent] = useState('');
+  const [files, setFiles] = useState([]); // full resource support
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [working, setWorking] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [notes, setNotes] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
 
   // simple simulated processing
@@ -27,11 +26,6 @@ export default function App() {
         if (next >= 100) {
           clearInterval(id);
           setWorking(false);
-          setNotes((prev) => prev.length ? prev : [
-            'Scanned for insecure RegisterNetEvent usage.',
-            'Checked loops for excessive Wait(0) calls.',
-            'Looked for deprecated ESX functions to replace with ox_lib.'
-          ]);
         }
         return next;
       });
@@ -39,14 +33,16 @@ export default function App() {
     return () => clearInterval(id);
   }, [working]);
 
-  const handleFileLoad = ({ content, meta }) => {
-    setFileMeta(meta);
-    setFileContent(content);
-    setNotes([]);
+  const handleFilesLoad = (incoming) => {
+    setFiles(incoming);
+    // try to auto-select a relevant file
+    const preferred = ['fxmanifest.lua', 'config.lua', 'server/', 'client/'];
+    const idx = incoming.findIndex((f) => preferred.some((p) => f.path.toLowerCase().includes(p)));
+    setSelectedIndex(idx >= 0 ? idx : 0);
     setWorking(true);
 
-    // crude suggestion inference
-    const lc = content.toLowerCase();
+    // build suggestions across files
+    const lc = incoming.map((f) => f.content?.toLowerCase() || '').join('\n');
     const sugg = [];
     if (lc.includes('registernetevent')) {
       sugg.push({ title: 'Validate RegisterNetEvent sources', desc: 'Ensure source checks on server and sanitize client payloads.' });
@@ -65,8 +61,8 @@ export default function App() {
 
   const handleAsk = (question, replyCb) => {
     setWorking(true);
-    setNotes([]);
-    const baseReply = `Got it. I will analyze ${fileMeta?.name ? fileMeta.name : 'your input'} for optimization, security, and framework best practices.`;
+    const activeFile = files[selectedIndex]?.path || 'your resource';
+    const baseReply = `Got it. I will analyze ${activeFile} and the rest of the resource for optimization, security, and framework best practices.`;
     setTimeout(() => replyCb(baseReply), 400);
     setTimeout(() => replyCb('Tip: prefer ox_lib callbacks for client→server interactions and validate identifiers on the server.'), 1200);
   };
@@ -100,13 +96,13 @@ export default function App() {
         {/* Analyzer Section */}
         <section id="analyzer" className="grid lg:grid-cols-3 gap-4 md:gap-6">
           <div className="lg:col-span-2 space-y-4">
-            <FileDrop onFileLoad={handleFileLoad} />
+            <FileDrop onFilesLoad={handleFilesLoad} />
             <PreviewPane
               working={working}
               progress={progress}
-              fileMeta={fileMeta}
-              fileContent={fileContent}
-              resultNotes={notes}
+              files={files}
+              selectedIndex={selectedIndex}
+              onSelect={setSelectedIndex}
             />
           </div>
           <div className="lg:col-span-1 space-y-4">
