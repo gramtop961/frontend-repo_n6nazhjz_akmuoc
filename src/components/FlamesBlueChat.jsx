@@ -27,9 +27,11 @@ export default function FlamesBlueChat() {
     setInput('');
     setSending(true);
 
+    const base = import.meta.env.VITE_BACKEND_URL || '';
+
     try {
       // Attempt backend call if available; otherwise gracefully fallback
-      const res = await fetch('/api/flamesblue', {
+      const res = await fetch(`${base}/api/flamesblue`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, userMsg] }),

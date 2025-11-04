@@ -8,7 +8,7 @@ export default function Hero() {
       {/* 3D scene block */}
       <div className="relative w-full h-[520px] md:h-[640px] rounded-2xl overflow-hidden ring-1 ring-white/10">
         <Spline
-          scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode"
+          scene="https://prod.spline.design/Qe6dlWJktclXcUBS/scene.splinecode"
           style={{ width: '100%', height: '100%' }}
         />
         {/* Soft gradient overlays that do not block interaction */}
