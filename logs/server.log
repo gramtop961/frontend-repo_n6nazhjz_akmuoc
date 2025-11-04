@@ -3,13 +3,13 @@
 > vite
 
 
-  VITE v5.4.20  ready in 789 ms
+  VITE v5.4.20  ready in 374 ms
 
   ➜  Local:   http://localhost:3000/
   ➜  Network: http://172.20.11.69:3000/
-10:23:39 AM [vite] Pre-transform error: Transform failed with 1 error:
+10:28:16 AM [vite] Pre-transform error: Transform failed with 1 error:
 /home/workspace/src/components/NUITester.jsx:137:54: ERROR: Expected ";" but found "No"
-10:23:40 AM [vite] Internal server error: Transform failed with 1 error:
+10:28:17 AM [vite] Internal server error: Transform failed with 1 error:
 /home/workspace/src/components/NUITester.jsx:137:54: ERROR: Expected ";" but found "No"
   Plugin: vite:esbuild
   File: /home/workspace/src/components/NUITester.jsx:137:54
@@ -32,7 +32,7 @@
       at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
       at Readable.push (node:internal/streams/readable:390:5)
       at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)
-10:24:01 AM [vite] Internal server error: Transform failed with 1 error:
+10:28:44 AM [vite] Internal server error: Transform failed with 1 error:
 /home/workspace/src/components/NUITester.jsx:137:54: ERROR: Expected ";" but found "No"
   Plugin: vite:esbuild
   File: /home/workspace/src/components/NUITester.jsx:137:54
