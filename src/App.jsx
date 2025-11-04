@@ -1,41 +1,17 @@
 import React from 'react';
+import TopNav from './components/TopNav';
 import Hero from './components/Hero';
-import Features from './components/Features';
-import FlamesBlueChat from './components/FlamesBlueChat';
+import NUITester from './components/NUITester';
 import Footer from './components/Footer';
-import { Flame } from 'lucide-react';
 
 export default function App() {
   return (
     <div className="min-h-screen bg-[#0B0D14] text-white">
-      {/* Top Bar */}
-      <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-black/30 bg-black/20 border-b border-white/10">
-        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-rose-500 p-[1px]">
-              <div className="h-full w-full rounded-[6px] bg-black/80 grid place-items-center">
-                <Flame className="h-4 w-4 text-white" />
-              </div>
-            </div>
-            <span className="font-semibold tracking-tight">FlamesBlue AI DevTools</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-white/70">
-            <a href="#features" className="hover:text-white">Features</a>
-            <a href="#chat" className="hover:text-white">Chat</a>
-          </nav>
-        </div>
-      </header>
-
+      <TopNav />
       <main className="mx-auto max-w-7xl px-4 py-8 md:py-12 space-y-8 md:space-y-12">
         <Hero />
-
-        <section id="features">
-          <Features />
-        </section>
-
-        <FlamesBlueChat />
+        <NUITester />
       </main>
-
       <Footer />
     </div>
   );
