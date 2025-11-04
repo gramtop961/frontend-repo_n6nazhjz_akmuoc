@@ -1,28 +1,43 @@
-import { useState } from 'react'
+import React from 'react';
+import Hero from './components/Hero';
+import Features from './components/Features';
+import Toolkit from './components/Toolkit';
+import Footer from './components/Footer';
+import { Flame } from 'lucide-react';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
+    <div className="min-h-screen bg-[#0B0D14] text-white">
+      {/* Top Bar */}
+      <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-black/30 bg-black/20 border-b border-white/10">
+        <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-indigo-500 via-purple-500 to-rose-500 p-[1px]">
+              <div className="h-full w-full rounded-[6px] bg-black/80 grid place-items-center">
+                <Flame className="h-4 w-4 text-white" />
+              </div>
+            </div>
+            <span className="font-semibold tracking-tight">FlamesBlue AI DevTools</span>
+          </div>
+          <nav className="hidden md:flex items-center gap-6 text-sm text-white/70">
+            <a href="#features" className="hover:text-white">Features</a>
+            <a href="#toolkit" className="hover:text-white">Toolkit</a>
+            <a href="#docs" className="hover:text-white">Docs</a>
+          </nav>
         </div>
-      </div>
-    </div>
-  )
-}
+      </header>
 
-export default App
+      <main className="mx-auto max-w-7xl px-4 py-8 md:py-12 space-y-6 md:space-y-10">
+        <Hero />
+        <div id="features">
+          <Features />
+        </div>
+        <div id="toolkit">
+          <Toolkit />
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
